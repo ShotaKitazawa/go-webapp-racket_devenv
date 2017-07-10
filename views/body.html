@@ -1,0 +1,15 @@
+{{define "body"}}
+<h1>{{.Title}}</h1>
+  <form id="sourcebox" action="post_exec" method="post"\>
+    <textarea name="sourcecode" cols="100" rows="20"></textarea>
+    <input type="submit" value="Execute" style="width:100px;height:50px;"/>
+  </form>
+  <form id="definebox" action="post_curry" method="post"\>
+  <select name="definelist" size="12">
+  {{.Define}}
+  </select></p>
+    <input type="submit" value="Curry" style="width:100px;height:50px;"/>
+  </form>
+  <blockquote>{{.Source}}</blockquote>
+  <p>{{.Execute}}</p>
+{{end}}
