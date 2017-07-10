@@ -52,6 +52,7 @@ func HelloServer(w http.ResponseWriter, r *http.Request) {
 func Post_exec(w http.ResponseWriter, r *http.Request) {
 	// 初期化
 	source = ""
+	execute = ""
 	// define_slice を source に追加
 	for _, arg := range define_slice {
 		source += arg + "\n"
@@ -99,10 +100,19 @@ func Post_exec(w http.ResponseWriter, r *http.Request) {
 }
 
 func Post_curry(w http.ResponseWriter, r *http.Request) {
+	// 初期化
+	source = ""
+	execute = ""
+	// 入力を source に追加
 	source = r.FormValue("definelist")
 	fmt.Println(source)
-	// currying して、重複チェックして、define_slice に append
-	// TODO
+	// currying 可能かチェックして、currying して、重複チェックして、define_slice に append
+	tmp := strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(source, " "), "("), " "), "define"), " "), "("), " ")
+	// TODO: 関数に二引数以上あれば
+	//re := regexp.MustCompile(".*? *?.*? *?x")
+	//fmt.Println(re.MatchString(tmp))
+
+	// TODO: Currying
 	// redirect
 	w.Header().Set("Content-Type", "text/html")
 	w.Header().Set("location", "/")
