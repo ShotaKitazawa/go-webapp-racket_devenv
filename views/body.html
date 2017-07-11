@@ -1,11 +1,11 @@
 {{define "body"}}
-<h1>{{.Title}}</h1>
-
+<h1>
+  <p>{{.Title}}</p>
+</h1>
 
 <div class="container">
   <div class="row">
     <div class="col-sm-9">
-
 
   <form id="sourcebox" action="post_exec" method="post"\>
     <div class="form-group">
@@ -15,14 +15,12 @@
     </div>
   </form>
 
-
     </div>
     <div class="col-sm-3">
 
-
   <form id="definebox" action="post_curry" method="post"\>
     <div class="form-group">
-      <label class="control-label" for="definelist">defined</label>
+      <label class="control-label" for="definelist">Defined</label>
       <select name="definelist" class="form-control" size=10>
         {{.Define}}
       </select>
@@ -30,13 +28,19 @@
     </div>
   </form>
 
-
     </div>
   </div>
+
+<label class="control-label" for="result">Result</label>
+<pre>
+{{.Execute}}
+</pre>
+
+<label class="control-label" for="presource">PreSource</label>
+<pre>
+{{.Source}}
+</pre>
+
 </div>
-
-
-<blockquote>{{.Source}}</blockquote>
-<p>{{.Execute}}</p>
 
 {{end}}
