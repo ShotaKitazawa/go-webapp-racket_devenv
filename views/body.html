@@ -2,45 +2,37 @@
 <h1>
   <p>{{.Title}}</p>
 </h1>
-
 <div class="container">
   <div class="row">
     <div class="col-sm-9">
-
-  <form id="sourcebox" action="post_exec" method="post"\>
-    <div class="form-group">
-      <label class="control-label" for="source">SourceCode</label>
-      <textarea name="sourcecode" class="form-control" rows="9"></textarea>
-    <input type="submit" value="Execute" class="btn btn-primary"/>
-    </div>
-  </form>
-
-    </div>
-    <div class="col-sm-3">
-
-  <form id="definebox" action="post_curry" method="post"\>
-    <div class="form-group">
-      <label class="control-label" for="definelist">Defined</label>
-      <select name="definelist" class="form-control" size=10>
-        {{.Define}}
-      </select>
-      <input type="submit" value="Curry" class="btn btn-primary"/>
-    </div>
-  </form>
-
+      <form id="sourcebox" action="post_exec" method="post"\>
+        <div class="form-group">
+          <label class="control-label" for="source">SourceCode</label>
+          <textarea name="sourcecode" class="form-control" rows="9"></textarea>
+        <input name="submit" type="submit" value="Execute" class="btn btn-primary"/>
+        </div>
+      </form>
+        </div>
+        <div class="col-sm-3">
+      <form id="definebox" action="post_curry" method="post"\>
+        <div class="form-group">
+          <label class="control-label" for="defined">Defined</label>
+          <select name="definelist" class="form-control" size=10>
+            {{.Define}}
+          </select>
+            <div class="col-sm-6">
+          <input name="submit" type="submit" value="Curry" class="btn btn-primary"/>
+            </div>
+            <div class="col-sm-6">
+          <input name="submit" type="submit" value="Clear" class="btn btn-primary"/>
+            </div>
+        </div>
+      </form>
     </div>
   </div>
-
-<label class="control-label" for="result">Result</label>
-<pre>
-{{.Execute}}
-</pre>
-
-<label class="control-label" for="presource">PreSource</label>
-<pre>
-{{.Source}}
-</pre>
-
+  <label class="control-label" for="result">Result</label>
+  <pre>{{.Result}}</pre>
+  <label class="control-label" for="presource">PreSource</label>
+  <pre>{{.Source}}</pre>
 </div>
-
 {{end}}

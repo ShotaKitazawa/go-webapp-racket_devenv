@@ -13,12 +13,12 @@ import (
 type TemplateData struct {
 	Title   string
 	Source  string
-	Execute string
+	Result string
 	Define  string
 }
 
 var source string
-var execute string
+var result string
 var define_slice []string
 var define_func_slice []string
 
@@ -34,7 +34,7 @@ func HelloServer(w http.ResponseWriter, r *http.Request) {
 	source_html := strings.Replace(source, "\n", "<br>", -1)
 
 	// 実行結果
-	execute_html := strings.Replace(execute, "\n", "<br>", -1)
+	result_html := strings.Replace(result, "\n", "<br>", -1)
 
 	// define で定義された関数を抜き出す
 	var define_html string
@@ -43,7 +43,7 @@ func HelloServer(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// テンプレートを実行して出力
-	templatedata := TemplateData{title, source_html, execute_html, define_html}
+	templatedata := TemplateData{title, source_html, result_html, define_html}
 	if err := tmpl.ExecuteTemplate(w, "base", templatedata); err != nil {
 		fmt.Println(err)
 	}
@@ -53,7 +53,7 @@ func HelloServer(w http.ResponseWriter, r *http.Request) {
 func Post_exec(w http.ResponseWriter, r *http.Request) {
 	// 初期化
 	source = ""
-	execute = ""
+	result = ""
 	// define_slice を source に追加
 	for _, arg := range define_slice {
 		source += arg + "\n"
@@ -90,10 +90,10 @@ func Post_exec(w http.ResponseWriter, r *http.Request) {
 	}
 	// 実行
 	out, _ := exec.Command("racket", "-e", strings.Replace(source, "\n", " ", -1)).CombinedOutput()
-	execute = string(out)
+	result = string(out)
 	// debug
 	fmt.Println("< send result")
-	fmt.Println(execute)
+	fmt.Println(result)
 	// redirect
 	w.Header().Set("Content-Type", "text/html")
 	w.Header().Set("location", "/")
@@ -103,18 +103,33 @@ func Post_exec(w http.ResponseWriter, r *http.Request) {
 func Post_curry(w http.ResponseWriter, r *http.Request) {
 	// 初期化
 	source = ""
-	execute = ""
+	result = ""
 	// 入力を source に追加
-	source = r.FormValue("definelist")
+	source = strings.Replace(r.FormValue("definelist"), "\n", "", -1)
+	fmt.Println("> receive source")
 	fmt.Println(source)
-	// currying 可能かチェックして、currying して、重複チェックして、define_slice に append
-	tmp := strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(source, " "), "("), " "), "define"), " "), "("), " ")
-	// TODO: 関数に二引数以上あれば
-	re := regexp.MustCompile(".*? *?.*? *?x")
-	fmt.Println(re.MatchString(tmp))
+	submit := r.FormValue("submit")
+	if submit == "Curry"{
+		// currying 可能かチェックして、currying して、重複チェックして、define_slice に append
+		tmp := strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(source, " "), "("), " "), "define"), " "), "("), " ")
+		// TODO: 関数に二引数以上あれば
+		re := regexp.MustCompile(".*? *?.*? *?x")
+		fmt.Println(re.MatchString(tmp))
 
-	// TODO: Currying
-	// redirect
+		// TODO: Currying
+		// redirect
+	}else if submit == "Clear"{
+		// define_slice, define_func_slice から該当要素の削除
+		tmp := strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(source, " "), "("), " "), "define"), " "), "("), " ")
+		re := regexp.MustCompile(".*? ")
+		func_name := re.FindString(tmp)
+		// 要素の削除: header.go
+		define_slice = remove(define_slice, source)
+		define_func_slice = remove(define_func_slice, func_name)
+		result = "Delete element"
+	}
+	fmt.Println("< send result")
+	fmt.Println(result)
 	w.Header().Set("Content-Type", "text/html")
 	w.Header().Set("location", "/")
 	w.WriteHeader(http.StatusMovedPermanently)
@@ -126,7 +141,7 @@ func main() {
 	http.HandleFunc("/post_exec", Post_exec)
 	http.HandleFunc("/post_curry", Post_curry)
 	log.Printf("Start Go HTTP Server")
-	err := http.ListenAndServe(":8000", nil)
+	err := http.ListenAndServe("localhost:8000", nil)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
