@@ -1,15 +1,42 @@
 {{define "body"}}
 <h1>{{.Title}}</h1>
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-9">
+
+
   <form id="sourcebox" action="post_exec" method="post"\>
-    <textarea name="sourcecode" cols="100" rows="20"></textarea>
-    <input type="submit" value="Execute" style="width:100px;height:50px;"/>
+    <div class="form-group">
+      <label class="control-label" for="source">SourceCode</label>
+      <textarea name="sourcecode" class="form-control" rows="9"></textarea>
+    <input type="submit" value="Execute" class="btn btn-primary"/>
+    </div>
   </form>
+
+
+    </div>
+    <div class="col-sm-3">
+
+
   <form id="definebox" action="post_curry" method="post"\>
-  <select name="definelist" size="12">
-  {{.Define}}
-  </select></p>
-    <input type="submit" value="Curry" style="width:100px;height:50px;"/>
+    <div class="form-group">
+      <label class="control-label" for="definelist">defined</label>
+      <select name="definelist" class="form-control" size=10>
+        {{.Define}}
+      </select>
+      <input type="submit" value="Curry" class="btn btn-primary"/>
+    </div>
   </form>
-  <blockquote>{{.Source}}</blockquote>
-  <p>{{.Execute}}</p>
+
+
+    </div>
+  </div>
+</div>
+
+
+<blockquote>{{.Source}}</blockquote>
+<p>{{.Execute}}</p>
+
 {{end}}

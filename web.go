@@ -30,6 +30,7 @@ func HelloServer(w http.ResponseWriter, r *http.Request) {
 	title := "Racket実行環境"
 
 	// ソースコード
+	//source_html := strings.Replace(source, "\n", "<br>", -1)
 	source_html := strings.Replace(source, "\n", "<br>", -1)
 
 	// 実行結果
@@ -109,8 +110,8 @@ func Post_curry(w http.ResponseWriter, r *http.Request) {
 	// currying 可能かチェックして、currying して、重複チェックして、define_slice に append
 	tmp := strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(source, " "), "("), " "), "define"), " "), "("), " ")
 	// TODO: 関数に二引数以上あれば
-	//re := regexp.MustCompile(".*? *?.*? *?x")
-	//fmt.Println(re.MatchString(tmp))
+	re := regexp.MustCompile(".*? *?.*? *?x")
+	fmt.Println(re.MatchString(tmp))
 
 	// TODO: Currying
 	// redirect
@@ -120,6 +121,7 @@ func Post_curry(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	http.Handle("/resources/", http.StripPrefix("/resources/", http.FileServer(http.Dir("resources/"))))
 	http.HandleFunc("/", HelloServer)
 	http.HandleFunc("/post_exec", Post_exec)
 	http.HandleFunc("/post_curry", Post_curry)
