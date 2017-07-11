@@ -87,7 +87,15 @@ func Post_curry(w http.ResponseWriter, r *http.Request) {
 	source = ""
 	result = ""
 	// 入力を source に追加
-	source = strings.Replace(r.FormValue("definelist"), "\n", "", -1)
+	get_defined := r.FormValue("definelist")
+	if get_defined == "" {
+		// redirect
+		w.Header().Set("Content-Type", "text/html")
+		w.Header().Set("location", "/")
+		w.WriteHeader(http.StatusMovedPermanently)
+		return
+	}
+	source = strings.Replace(get_defined, "\n", "", -1)
 	fmt.Println("> receive source")
 	fmt.Println(source)
 	submit := r.FormValue("submit")
