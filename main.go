@@ -5,16 +5,15 @@ import (
 	"log"
 	"net/http"
 	"os/exec"
-	"regexp"
 	"strings"
 	"text/template"
 )
 
 type TemplateData struct {
-	Title   string
-	Source  string
+	Title  string
+	Source string
 	Result string
-	Define  string
+	Define string
 }
 
 var source string
@@ -59,37 +58,20 @@ func Post_exec(w http.ResponseWriter, r *http.Request) {
 		source += arg + "\n"
 	}
 	// 入力を source に追加
+	// TODO: sourcecode からの入力をまずフォーマット
+	//reContinuousBlank := regexp.MustCompile(" +")
+	//source += reContinuousBlank.ReplaceAllString(r.FormValue("sourcecode"), " ")
 	source += r.FormValue("sourcecode")
 	// debug
 	fmt.Println("> receive source")
 	fmt.Println(source)
-	//ここに source > define を書く
-	//TODO: \n区切りでsliceを切る > 式が改行されずに書かれているのにも対応
-	slice := strings.Split(source, "\n")
-	for _, arg := range slice {
-		// "define" があるか
-		if strings.HasPrefix(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(arg, " "), "("), " "), "define") {
-			// func_name に関数名代入
-			tmp := strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(arg, " "), "("), " "), "define"), " "), "("), " ")
-			re := regexp.MustCompile(".*? ")
-			func_name := re.FindString(tmp)
-			// define_func_slice に func_name が登録されていないか
-			flag := 0
-			for _, arg2 := range define_func_slice {
-				if func_name == arg2 {
-					flag = 1
-					break
-				}
-			}
-			// もし登録されていなければ
-			if flag == 0 {
-				define_func_slice = append(define_func_slice, func_name)
-				define_slice = append(define_slice, arg)
-			}
-		}
-	}
 	// 実行
-	out, _ := exec.Command("racket", "-e", strings.Replace(source, "\n", " ", -1)).CombinedOutput()
+	out, err := exec.Command("racket", "-e", strings.Replace(source, "\n", " ", -1)).CombinedOutput()
+	// source > defined
+	if err == nil {
+		add_defined(source)
+	}
+	// 実行結果代入
 	result = string(out)
 	// debug
 	fmt.Println("< send result")
@@ -109,27 +91,18 @@ func Post_curry(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("> receive source")
 	fmt.Println(source)
 	submit := r.FormValue("submit")
-	if submit == "Curry"{
-		// currying 可能かチェックして、currying して、重複チェックして、define_slice に append
-		tmp := strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(source, " "), "("), " "), "define"), " "), "("), " ")
-		// TODO: 関数に二引数以上あれば
-		re := regexp.MustCompile(".*? *?.*? *?x")
-		fmt.Println(re.MatchString(tmp))
-
-		// TODO: Currying
-		// redirect
-	}else if submit == "Clear"{
-		// define_slice, define_func_slice から該当要素の削除
-		tmp := strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(strings.TrimLeft(source, " "), "("), " "), "define"), " "), "("), " ")
-		re := regexp.MustCompile(".*? ")
-		func_name := re.FindString(tmp)
-		// 要素の削除: header.go
-		define_slice = remove(define_slice, source)
-		define_func_slice = remove(define_func_slice, func_name)
+	if submit == "Curry" {
+		// Curry化: header.go
+		result = currying(source)
+		clearing(source)
+		add_defined(result)
+	} else if submit == "Clear" {
+		clearing(source)
 		result = "Delete element"
 	}
 	fmt.Println("< send result")
 	fmt.Println(result)
+	// redirect
 	w.Header().Set("Content-Type", "text/html")
 	w.Header().Set("location", "/")
 	w.WriteHeader(http.StatusMovedPermanently)

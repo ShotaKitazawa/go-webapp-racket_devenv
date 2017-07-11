@@ -1,2 +1,2 @@
-web: header.go
-	go build web.go header.go
+main: main.go header.go
+	go build main.go header.go

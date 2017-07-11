@@ -16,13 +16,19 @@ Racket 用 Web 開発環境
 
 # TODO
 
-- Curry 化
+- 完: Curry 化
 
 - 完: Bootstrap でキレイに
 
+- 完: define_list の clear ボタン実装
+
 ---
 
-- 完: define_list の clear ボタン実装
+- 出力結果の見直し
+  - 改行コードが変なところに入っている?
+
+- 不完全な形の関数も Defined に突っ込んでしまう
+  - 例: `(define (fc x y) ()`
 
 - 改行時、括弧のネスト数だけスペースを挿入
 
@@ -31,7 +37,11 @@ Racket 用 Web 開発環境
 - 実行速度の向上
   - string += string > strings.Join
   - 他色々
-  - sourcecode からの入力をまずフォーマットしたほうがよさげ
+
+- sourcecode からの入力をまずフォーマットしたほうがよさげ
+  - Execute 時に以下をする
+    - 1つ以上のスペースを1つのスペースに置換
+    - ( , ) の周りのSpace排除
 
 - 悪いことをエスケープしなきゃ使い物にならない (例: ローカルのファイル参照)
   - 現在: フォームから来た文字列を racket -e コマンドに食わせている
