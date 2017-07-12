@@ -10,9 +10,18 @@ Racket 用 Web 開発環境
     - Clear にて関数削除
   - Curry で関数をCurry化
 
+# 実行方法
+
+- `make` コマンドで main 実行ファイルを生成
+- コマンドラインにて main を実行
+
 # 環境
 
+- macOS 10.12.5
+  - Darwin Kernel Version 16.6.0
 - go version go1.8.3 darwin/amd64
+- Racket v6.9
+- Bootstrap v3.3.7
 
 # TODO
 
