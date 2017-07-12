@@ -4,7 +4,6 @@ Racket 用 Web 開発環境
 
 - フォームにコードを書いて Execute で実行
   - 裏で `racket -e "Source"` が動いている
-    - TODO: #lang による言語切替に対応するため、tmp.rktファイルにSourceを書き込んだあと、`racket tmp.rkt` で実行出来るようにする
 - defined に 過去実行したコードの define を定義
   - defined に定義されている関数は以降の Execute 時にも反映
   - defined に定義された関数名は再定義できない
@@ -16,6 +15,7 @@ Racket 用 Web 開発環境
 
 - `make` コマンドで main 実行ファイルを生成
 - コマンドラインにて main を実行
+  - http://localhost:8000/ にてアクセス可能
 
 # 環境
 
@@ -49,10 +49,10 @@ Racket 用 Web 開発環境
   - string += string > strings.Join
   - 他色々
 
-- sourcecode からの入力をまずフォーマットしたほうがよさげ
+- sourcecode からの入力をまずフォーマットしたほうがよさそう
   - Execute 時に以下をする
     - 1つ以上のスペースを1つのスペースに置換
     - ( , ) の周りのSpace排除
 
-- 悪いことをエスケープしなきゃ使い物にならない (例: ローカルのファイル参照)
+- 悪いことをエスケープしなきゃマズい (例: ローカルのファイル参照)
   - 現在: フォームから来た文字列を racket -e コマンドに食わせている
